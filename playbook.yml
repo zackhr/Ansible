@@ -1,0 +1,60 @@
+---
+
+  hosts: webserver
+  become: true
+  tasks:
+  - name: install Apache web server
+    apt: 
+      name=apache2
+      state: present
+    tags: apache
+  - name: Install PHP
+    apt:
+      name:
+      -php
+      state: latest
+
+- name: setup de Mysql, creacion de un usuario y base de datos y habilita login remoto
+  hosts: database
+  become: true
+  tasks:
+  - name: install MySQL database server
+    apt:
+      name: "{{item}}"
+      state: present
+    tags: mysql
+    loop:
+      - default-mysql-server
+      - default-mysql-client 
+      - python-mysqldb
+      - python3-mysqldb
+      - libdbd-mysql-perl
+  - name: inicia el servicio mysql
+    service:
+      name: mysql
+      state: started
+      enabled: yes
+  - name: crea un usuario
+    mysql_user:
+      name: usuario
+      password: 1234
+      priv: '*.*:ALL'
+      host: '%'
+      state: present
+  - name: creacion de la base de datos
+    mysql_db:
+      name: ejemplo
+      state: present
+  - name: Habilita el login remoto
+    lineinfile:
+      path: /etc/mysql/mysql.conf.d/mysqld.cnf
+      regexp: '^bind-address'
+      line: 'bind-address = 0.0.0.0'
+      backup: yes
+    notify:
+      - Restart mysql
+  handlers:
+  - name: Restart mysql
+    service:
+      name: mysql
+      state: restarted
