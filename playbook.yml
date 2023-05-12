@@ -8,53 +8,39 @@
       name=apache2
       state: present
     tags: apache
-  - name: Install PHP
+  - name: Instalar PHP
     apt:
       name:
       -php
-      state: latest
+      state: present
 
-- name: setup de Mysql, creacion de un usuario y base de datos y habilita login remoto
   hosts: database
   become: true
   tasks:
-  - name: install MySQL database server
+  - name: Instalar MySQL
     apt:
-      name: "{{item}}"
+      name: mysql-server
       state: present
-    tags: mysql
-    loop:
-      - default-mysql-server
-      - default-mysql-client 
-      - python-mysqldb
-      - python3-mysqldb
-      - libdbd-mysql-perl
-  - name: inicia el servicio mysql
-    service:
-      name: mysql
-      state: started
-      enabled: yes
-  - name: crea un usuario
-    mysql_user:
-      name: usuario
-      password: 1234
-      priv: '*.*:ALL'
-      host: '%'
-      state: present
-  - name: creacion de la base de datos
-    mysql_db:
-      name: ejemplo
-      state: present
-  - name: Habilita el login remoto
-    lineinfile:
-      path: /etc/mysql/mysql.conf.d/mysqld.cnf
-      regexp: '^bind-address'
-      line: 'bind-address = 0.0.0.0'
-      backup: yes
+
+  - name: Copiar archivo de configuración
+    copy:
+      src: files/my.cnf
+      dest: /etc/mysql/my.cnf
     notify:
-      - Restart mysql
-  handlers:
-  - name: Restart mysql
-    service:
-      name: mysql
-      state: restarted
+        - Reiniciar MySQL
+
+  - name: Crear base de datos
+    mysql_db:
+      name: test_db
+      state: present
+    notify:
+        - Reiniciar MySQL
+
+  - name: Crear usuario y otorgar privilegios
+    mysql_user:
+      name: user11
+      password: password
+      login_user: root
+      login_password: password
+      priv: "test_db.*:ALL"
+      state: present
