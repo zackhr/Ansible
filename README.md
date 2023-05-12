@@ -65,7 +65,7 @@
 34.174.118.249
 [database]
 34.176.91.217
-# This is the default ansible 'hosts' file.
+<pre># This is the default ansible 'hosts' file.
 #
 # It should live in /etc/ansible/hosts
 #
@@ -93,7 +93,7 @@
 # If you have multiple hosts following a pattern you can specify
 # them like this:
 
-## www[001:006].example.com
+## www[001:006].example.com</pre>
 </pre>
 <h1>Prueba de configuración de Ansible</h1>
 <pre>ansible -m ping all</pre>
