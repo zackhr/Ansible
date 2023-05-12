@@ -73,27 +73,27 @@
 #   - Blank lines are ignored
 #   - Groups of hosts are delimited by [header] elements
 #   - You can enter hostnames or ip addresses
-#   - A hostname/ip can be a member of multiple groups
+#   - A hostname/ip can be a member of multiple groups</pre>
 
-# Ex 1: Ungrouped hosts, specify before any group headers.
+<pre># Ex 1: Ungrouped hosts, specify before any group headers.
 
 ## green.example.com
 ## blue.example.com
 ## 192.168.100.1
-## 192.168.100.10
+## 192.168.100.10 </pre>
 
-# Ex 2: A collection of hosts belonging to the 'webservers' group
+<pre># Ex 2: A collection of hosts belonging to the 'webservers' group
 
 ## [webservers]
 ## alpha.example.org
 ## beta.example.org
 ## 192.168.1.100
-## 192.168.1.110
+## 192.168.1.110 </pre>
 
-# If you have multiple hosts following a pattern you can specify
-# them like this:
+<pre># If you have multiple hosts following a pattern you can specify
+# them like this:</pre
 
-## www[001:006].example.com</pre>
+<pre>## www[001:006].example.com</pre>
 </pre>
 <h1>Prueba de configuración de Ansible</h1>
 <pre>ansible -m ping all</pre>
